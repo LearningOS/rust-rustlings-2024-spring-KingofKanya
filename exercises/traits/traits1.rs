@@ -16,7 +16,7 @@ impl AppendBar for String {
     // TODO: Implement `AppendBar` for type `String`.
     fn append_bar(self) -> Self {
         let mut ret = self;
-        ret.push_str("bar");
+        ret.push_str("Bar");
         ret
     }
 }

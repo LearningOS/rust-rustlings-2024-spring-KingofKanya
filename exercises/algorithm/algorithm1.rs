@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,13 +69,37 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+        where
+        T: Ord + Clone,
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let mut ret = LinkedList::new();
+        let mut a_cur = list_a.start;
+        let mut b_cur = list_b.start;
+        // pub const fn is_some(&self) -> bool
+        // Returns true if the option is a Some value.
+        while a_cur.is_some() && b_cur.is_some() {
+            // 通过 unwrap 方法获取当前节点的引用，并使用 as_ref 方法将其转换为不可变引用
+            let cur_a_ref = unsafe{a_cur.unwrap().as_ref()};
+            let cur_b_ref = unsafe{b_cur.unwrap().as_ref()};
+            if cur_a_ref.val <= cur_b_ref.val {
+                ret.add(cur_a_ref.val.clone());
+                a_cur = cur_a_ref.next;
+            }else{
+                ret.add(cur_b_ref.val.clone());
+                b_cur = cur_b_ref.next;
+            }
         }
+        // appending the remaining part
+        let mut remaining = a_cur;
+        if b_cur.is_some() {
+            remaining = b_cur;
+        }
+        while let Some(node_ptr) = remaining {
+            let node_ref = unsafe{node_ptr.as_ref()};
+            ret.add(node_ref.val.clone());
+            remaining = node_ref.next;
+        }
+        ret
 	}
 }
 
